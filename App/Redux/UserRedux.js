@@ -6,7 +6,10 @@ import _ from 'lodash';
 const { Types, Creators } = createActions({
   userRequest: ['search', 'pageNo'],
   userSuccess: ['payload'],
-  userFailure: null
+  userFailure: null,
+  getCollectionRequest: ['username'],
+  getCollectionSuccess: ['collection'],
+  getCollectionFailure: null
 });
 
 export const UserTypes = Types;
@@ -53,10 +56,26 @@ export const success = (state, action) => {
 export const failure = state =>
   state.merge({ fetching: false, error: true, payload: null });
 
+export const collectionRequest = state => {
+  return state.merge({ fetching: true });
+};
+// successful api lookup
+export const collectionSuccess = (state, action) => {
+  const { collection } = action;
+  return state.merge({
+    fetching: false,
+    error: null,
+    collection
+  });
+};
+
 /* ------------- Hookup Reducers To Types ------------- */
 
 export const userReducer = createReducer(INITIAL_STATE, {
   [Types.USER_REQUEST]: request,
   [Types.USER_SUCCESS]: success,
-  [Types.USER_FAILURE]: failure
+  [Types.USER_FAILURE]: failure,
+  [Types.GET_COLLECTION_REQUEST]: collectionRequest,
+  [Types.GET_COLLECTION_SUCCESS]: collectionSuccess,
+  [Types.GET_COLLECTION_FAILURE]: failure
 });

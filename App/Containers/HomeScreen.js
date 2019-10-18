@@ -63,7 +63,13 @@ class HomeScreen extends Component {
       <FlatList
         data={users}
         renderItem={({ item }) => (
-          <UserList name={item.name} image={item.profile_image.small} />
+          <UserList
+            name={item.name}
+            image={item.profile_image.small}
+            onPress={() => {
+              this.props.navigation.navigate('UserCollectionScreen');
+            }}
+          />
         )}
         keyExtractor={item => item.id}
         onEndReachedThreshold={0.1}
@@ -78,7 +84,6 @@ class HomeScreen extends Component {
     return <ActivityIndicator size="small" color={Colors.primary} />;
   }
   render() {
-    const { fetching } = this.props;
     return (
       <View style={styles.mainContainer}>
         {this.readerSearchBox()}
