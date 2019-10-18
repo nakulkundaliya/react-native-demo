@@ -27,6 +27,7 @@ class HomeScreen extends Component {
       pageNo: 1
     };
   }
+
   onSearchUser = text => {
     this.setState({ search: text, pageNo: 1 }, () => {
       let { search, pageNo } = this.state;
@@ -67,7 +68,9 @@ class HomeScreen extends Component {
             name={item.name}
             image={item.profile_image.small}
             onPress={() => {
-              this.props.navigation.navigate('UserCollectionScreen');
+              this.props.navigation.navigate('UserCollectionScreen', {
+                username: item.username
+              });
             }}
           />
         )}
@@ -97,15 +100,15 @@ const mapStateToProps = state => {
   return {
     fetching: state.user.fetching,
     users: state.user.users,
-    error: state.user.error,
-    pageNo: state.user.pageNo,
-    isLoadMore: state.user.isLoadMore
+    error: state.user.error
   };
 };
 
 const mapDispatchToProps = dispatch => ({
   attemptGetUser: (search, pageNo) =>
-    dispatch(UserActions.userRequest(search, pageNo))
+    dispatch(UserActions.userRequest(search, pageNo)),
+  attemptGetPhotos: username =>
+    dispatch(UserActions.getCollectionRequest(username))
 });
 
 export default connect(

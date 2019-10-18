@@ -15,7 +15,6 @@ const create = () => {
   });
 
   const getUsers = (search, pageNo) => {
-    console.log('pageNo', pageNo);
     return unsplash.search
       .users(search, pageNo, 20)
       .then(toJson)
@@ -24,9 +23,18 @@ const create = () => {
       });
   };
 
+  const getCollection = username => console.log('getCollection');
+  unsplash.users
+    .photos('naoufal', 1, 10, 'popular', false)
+    .then(toJson)
+    .then(json => {
+      return json;
+    });
+
   return {
     // a list of the API functions from step 2
-    getUsers
+    getUsers,
+    getCollection
   };
 };
 
