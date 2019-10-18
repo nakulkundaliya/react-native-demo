@@ -22,23 +22,18 @@ class HomeScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      loading: false,
-      search: ''
+      search: '',
+      loading: true,
+      pageNo: 1
     };
-    this.timeout = 0;
   }
-
-  componentDidMount() {
-    this.props.attemptGetUser();
-  }
-
   onSearchUser = text => {
-    this.setState({ search: text }, () => {
-      let { search } = this.state;
+    this.setState({ search: text, pageNo: 1 }, () => {
+      let { search, pageNo } = this.state;
       if (this.timeout) clearTimeout(this.timeout);
       this.timeout = setTimeout(() => {
-        //search function
-        this.props.attemptGetUser(search);
+        this.props.attemptGetUser(search, pageNo);
+        this.setState({ pageNo: parseInt(pageNo) + 1 });
       }, 1000);
     });
   };
@@ -54,6 +49,14 @@ class HomeScreen extends Component {
     );
   }
 
+  fetchMore() {
+    const { fetching, pageNo } = this.props;
+    let { search } = this.state;
+
+    if (!fetching) {
+      this.props.attemptGetUser(search, pageNo);
+    }
+  }
   renderUserList() {
     const { users } = this.props;
     return (
@@ -63,6 +66,10 @@ class HomeScreen extends Component {
           <UserList name={item.name} image={item.profile_image.small} />
         )}
         keyExtractor={item => item.id}
+        onEndReachedThreshold={0.1}
+        onEndReached={() => this.fetchMore()}
+        extraData={this.props}
+        // ListFooterComponent={this.renderSpinner}
       />
     );
   }
@@ -75,7 +82,7 @@ class HomeScreen extends Component {
     return (
       <View style={styles.mainContainer}>
         {this.readerSearchBox()}
-        {fetching ? this.renderSpinner() : this.renderUserList()}
+        {this.renderUserList()}
       </View>
     );
   }
@@ -86,12 +93,14 @@ const mapStateToProps = state => {
     fetching: state.user.fetching,
     users: state.user.users,
     error: state.user.error,
-    types: state.user.types
+    pageNo: state.user.pageNo,
+    isLoadMore: state.user.isLoadMore
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  attemptGetUser: search => dispatch(UserActions.userRequest(search))
+  attemptGetUser: (search, pageNo) =>
+    dispatch(UserActions.userRequest(search, pageNo))
 });
 
 export default connect(

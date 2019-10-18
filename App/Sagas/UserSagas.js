@@ -3,8 +3,8 @@ import UserActions from '../Redux/UserRedux';
 
 export function* getUsers(api, action) {
   console.log(action);
-  const { search } = action;
-  const response = yield call(api.getUsers, search);
+  const { search, pageNo } = action;
+  const response = yield call(api.getUsers, search, pageNo);
   if (!response.errors) {
     // do data conversion here if needed
     yield put(UserActions.userSuccess(response.results));

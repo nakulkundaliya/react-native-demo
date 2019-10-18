@@ -5,17 +5,19 @@ import Config from 'react-native-config';
 // our "constructor"
 const create = () => {
   const unsplash = new Unsplash({
-    accessKey: Config.ACCESS_KEY,
+    // accessKey: Config.ACCESS_KEY,
+    accessKey:
+      'aa2f3c3be8125f1fc86e3007153420c4e446c19b7b0c6d80a6257b281c9a0dc5',
     headers: {
       'X-Custom-Header': 'foo'
     },
     timeout: 500 // values set in ms
   });
 
-  const getUsers = search => {
-    console.log('search', search);
+  const getUsers = (search, pageNo) => {
+    console.log('pageNo', pageNo);
     return unsplash.search
-      .users(search, 1, 10)
+      .users(search, pageNo, 20)
       .then(toJson)
       .then(json => {
         return json;

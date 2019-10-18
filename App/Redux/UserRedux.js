@@ -4,7 +4,7 @@ import _ from 'lodash';
 /* ------------- Types and Action Creators ------------- */
 
 const { Types, Creators } = createActions({
-  userRequest: ['search'],
+  userRequest: ['search', 'pageNo'],
   userSuccess: ['payload'],
   userFailure: null
 });
@@ -25,12 +25,28 @@ export const INITIAL_STATE = Immutable({
 /* ------------- Reducers ------------- */
 
 // request the data from an api
-export const request = state => state.merge({ fetching: true });
+export const request = (state, action) => {
+  return state.merge({ fetching: true, pageNo: action.pageNo });
+};
 
 // successful api lookup
 export const success = (state, action) => {
   const { payload } = action;
-  return state.merge({ fetching: false, error: null, payload, users: payload });
+
+  let users;
+  let pageNo = state.pageNo;
+  if (pageNo != 1) {
+    users = [...state.users, ...payload];
+  } else {
+    users = payload;
+  }
+
+  return state.merge({
+    fetching: false,
+    error: null,
+    users,
+    pageNo: parseInt(pageNo) + 1
+  });
 };
 
 // Something went wrong somewhere.
