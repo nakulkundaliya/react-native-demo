@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ScrollView, Text, KeyboardAvoidingView } from 'react-native';
+import { FlatList, Image, View } from 'react-native';
 import { connect } from 'react-redux';
 // Add Actions - replace 'Your' with whatever your reducer is called :)
 // import YourActions from '../Redux/YourRedux'
@@ -32,13 +32,43 @@ class UserCollectionScreen extends Component {
     this.props.attemptGetPhotos(username, pageNo);
   }
 
+  fetchMore() {
+    const { fetching } = this.props;
+
+    if (!fetching) {
+      let { pageNo } = this.state;
+      this.setState({ pageNo: parseInt(pageNo) + 1 }, () => {
+        let { username, pageNo } = this.state;
+        this.props.attemptGetPhotos(username, pageNo);
+      });
+    }
+  }
+
+  renderCollectionList() {
+    const { collections } = this.props;
+    return (
+      <FlatList
+        data={collections}
+        renderItem={({ item }) => (
+          <Image
+            source={{
+              uri: item.urls.regular
+            }}
+            style={{ height: 100, width: 100 }}
+          />
+        )}
+        keyExtractor={item => item.id}
+        onEndReachedThreshold={0.1}
+        onEndReached={() => this.fetchMore()}
+        extraData={this.props}
+        // ListFooterComponent={this.renderSpinner}
+      />
+    );
+  }
+
   render() {
     return (
-      <ScrollView style={styles.container}>
-        <KeyboardAvoidingView behavior="position">
-          <Text>UserCollectionScreen</Text>
-        </KeyboardAvoidingView>
-      </ScrollView>
+      <View style={styles.mainContainer}>{this.renderCollectionList()}</View>
     );
   }
 }
@@ -47,13 +77,13 @@ const mapStateToProps = state => {
   return {
     fetching: state.user.fetching,
     error: state.user.error,
-    collection: state.user.collection
+    collections: state.user.collections
   };
 };
 
 const mapDispatchToProps = dispatch => ({
-  attemptGetPhotos: username =>
-    dispatch(UserActions.getCollectionRequest(username))
+  attemptGetPhotos: (username, pageNo) =>
+    dispatch(UserActions.getCollectionRequest(username, pageNo))
 });
 
 export default connect(

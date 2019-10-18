@@ -4,7 +4,7 @@ import API from '../Services/Api';
 import { UserTypes } from '../Redux/UserRedux';
 
 /* ------------- Sagas ------------- */
-import { getUsers } from './UserSagas';
+import { getUsers, getCollection } from './UserSagas';
 /* ------------- API ------------- */
 
 // The API we use is only used from Sagas, so we create it here and pass along
@@ -18,6 +18,7 @@ export default function* root() {
     // some sagas only receive an action
     // takeLatest(StartupTypes.STARTUP, startup),
     // some sagas receive extra parameters in addition to an action
-    takeLatest(UserTypes.USER_REQUEST, getUsers, api)
+    takeLatest(UserTypes.USER_REQUEST, getUsers, api),
+    takeLatest(UserTypes.GET_COLLECTION_REQUEST, getCollection, api)
   ]);
 }

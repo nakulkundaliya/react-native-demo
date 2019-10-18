@@ -7,8 +7,8 @@ const { Types, Creators } = createActions({
   userRequest: ['search', 'pageNo'],
   userSuccess: ['payload'],
   userFailure: null,
-  getCollectionRequest: ['username'],
-  getCollectionSuccess: ['collection'],
+  getCollectionRequest: ['username', 'pageNo'],
+  getCollectionSuccess: ['collections'],
   getCollectionFailure: null
 });
 
@@ -20,7 +20,10 @@ export default Creators;
 export const INITIAL_STATE = Immutable({
   fetching: null,
   users: [],
-  error: null
+  error: null,
+  collections: [],
+  pageNo: 1,
+  collectionNo: 1
 });
 
 /* ------------- Selectors ------------- */
@@ -29,7 +32,11 @@ export const INITIAL_STATE = Immutable({
 
 // request the data from an api
 export const request = (state, action) => {
-  return state.merge({ fetching: true, pageNo: action.pageNo });
+  return state.merge({
+    fetching: true,
+    pageNo: action.pageNo,
+    collectionNo: action.collectionNo
+  });
 };
 
 // successful api lookup
@@ -61,11 +68,18 @@ export const collectionRequest = state => {
 };
 // successful api lookup
 export const collectionSuccess = (state, action) => {
-  const { collection } = action;
+  const { collections } = action;
+  let tempCollections;
+  let pageNo = state.collectionNo;
+  if (pageNo != 1) {
+    tempCollections = [...state.collections, ...collections];
+  } else {
+    tempCollections = collections;
+  }
   return state.merge({
     fetching: false,
     error: null,
-    collection
+    collections: tempCollections
   });
 };
 

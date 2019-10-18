@@ -13,12 +13,12 @@ export function* getUsers(api, action) {
 }
 
 export function* getCollection(api, action) {
-  const { username } = action;
-  console.log('usna', username);
-  const response = yield call(api.getUserCollections, username);
-  if (!response.errors) {
+  const { username, pageNo } = action;
+  const response = yield call(api.getCollection, username, pageNo);
+
+  if (response.length) {
     // do data conversion here if needed
-    yield put(UserActions.getCollectionSuccess(response.results));
+    yield put(UserActions.getCollectionSuccess(response));
   } else {
     yield put(UserActions.getCollectionFailure());
   }
