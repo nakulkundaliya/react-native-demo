@@ -1,4 +1,4 @@
-# CBox Challange
+# Reac Native Demo APP
 
 ## Setup React-Native in Mechine
 
@@ -6,8 +6,14 @@
  $ npm install -g react-native-cli
 ```
 
-## Run Project
+## Create a .env file for Key
 
+1. Create a .env file 
+2. Add your Access key
+    ```
+    ACCESS_KEY=''
+    ```
+## Run Project
 ```
 1. Open terminal and go to project folder
 

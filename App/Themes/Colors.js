@@ -23,6 +23,7 @@ const colors = {
   border: '#483F53',
   banner: '#5F3E63',
   text: '#E0D7E5',
-}
+  placeHolderText: '#ccc'
+};
 
-export default colors
+export default colors;
