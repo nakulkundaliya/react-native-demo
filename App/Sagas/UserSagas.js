@@ -15,8 +15,8 @@ export function* getUsers(api, action) {
 export function* getCollection(api, action) {
   const { username, pageNo } = action;
   const response = yield call(api.getCollection, username, pageNo);
-
-  if (response.length) {
+  console.log('response', response);
+  if (response) {
     // do data conversion here if needed
     yield put(UserActions.getCollectionSuccess(response));
   } else {

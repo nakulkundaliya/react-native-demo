@@ -24,12 +24,15 @@ const create = () => {
   };
 
   const getCollection = (username, pageNo) => {
-    console.log('==============pageNo', pageNo);
     return unsplash.users
       .photos(username, pageNo, 10, 'popular', false)
       .then(toJson)
       .then(json => {
         return json;
+      })
+      .catch(err => {
+        console.log('er', err);
+        return false;
       });
   };
 

@@ -32,12 +32,11 @@ export const INITIAL_STATE = Immutable({
 
 // request the data from an api
 export const request = (state, action) => {
-  const { pageNo, collectionNo } = action;
+  const { pageNo } = action;
 
   return state.merge({
     fetching: true,
     pageNo: pageNo,
-    collectionNo: collectionNo,
     users: pageNo === 1 ? [] : state.users
   });
 };
@@ -66,8 +65,14 @@ export const success = (state, action) => {
 export const failure = state =>
   state.merge({ fetching: false, error: true, payload: null });
 
-export const collectionRequest = state => {
-  return state.merge({ fetching: true });
+export const collectionRequest = (state, action) => {
+  const { pageNo } = action;
+
+  return state.merge({
+    fetching: true,
+    collectionNo: pageNo,
+    collections: pageNo === 1 ? [] : state.collections
+  });
 };
 // successful api lookup
 export const collectionSuccess = (state, action) => {
