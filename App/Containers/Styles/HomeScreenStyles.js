@@ -5,5 +5,10 @@ export default StyleSheet.create({
   ...ApplicationStyles.screen,
   horizontalScroll: {
     height: 50
+  },
+  noRecordTextStyle: {
+    marginTop: 50,
+    justifyContent: 'center',
+    textAlign: 'center'
   }
 });

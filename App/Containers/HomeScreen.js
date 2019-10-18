@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { ActivityIndicator, View, FlatList } from 'react-native';
+import { ActivityIndicator, View, FlatList, Text } from 'react-native';
 import { connect } from 'react-redux';
 import _ from 'lodash';
 
@@ -58,8 +58,12 @@ class HomeScreen extends Component {
       this.props.attemptGetUser(search, pageNo);
     }
   }
+  renderEmptyComponent() {
+    return <Text style={styles.noRecordTextStyle}>No record found</Text>;
+  }
   renderUserList() {
     const { users } = this.props;
+    if (!users.length) return this.renderEmptyComponent();
     return (
       <FlatList
         data={users}
@@ -78,6 +82,8 @@ class HomeScreen extends Component {
         onEndReachedThreshold={0.1}
         onEndReached={() => this.fetchMore()}
         extraData={this.props}
+        // renderEmptyListComponent={this.renderEmptyComponent}
+
         // ListFooterComponent={this.renderSpinner}
       />
     );
@@ -87,9 +93,11 @@ class HomeScreen extends Component {
     return <ActivityIndicator size="small" color={Colors.primary} />;
   }
   render() {
+    const { fetching, users } = this.props;
     return (
       <View style={styles.mainContainer}>
         {this.readerSearchBox()}
+        {fetching && !users.length && this.renderSpinner()}
         {this.renderUserList()}
       </View>
     );

@@ -32,10 +32,13 @@ export const INITIAL_STATE = Immutable({
 
 // request the data from an api
 export const request = (state, action) => {
+  const { pageNo, collectionNo } = action;
+
   return state.merge({
     fetching: true,
-    pageNo: action.pageNo,
-    collectionNo: action.collectionNo
+    pageNo: pageNo,
+    collectionNo: collectionNo,
+    users: pageNo === 1 ? [] : state.users
   });
 };
 

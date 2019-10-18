@@ -12,7 +12,7 @@ import styles from './Styles/UserCollectionScreenStyle';
 
 class UserCollectionScreen extends Component {
   static navigationOptions = {
-    title: 'User',
+    title: 'User Collection',
     headerStyle: {
       backgroundColor: Colors.primary
     },
@@ -44,6 +44,9 @@ class UserCollectionScreen extends Component {
     }
   }
 
+  renderEmptyComponent() {
+    return <Text>No record found</Text>;
+  }
   renderCollectionList() {
     const { collections } = this.props;
     return (
@@ -54,22 +57,23 @@ class UserCollectionScreen extends Component {
             source={{
               uri: item.urls.regular
             }}
-            style={{ height: 100, width: 100 }}
+            style={{ height: 200, width: '50%' }}
           />
         )}
+        numColumns={2}
         keyExtractor={item => item.id}
         onEndReachedThreshold={0.1}
         onEndReached={() => this.fetchMore()}
         extraData={this.props}
+        renderEmptyListComponent={this.renderEmptyComponent}
+
         // ListFooterComponent={this.renderSpinner}
       />
     );
   }
 
   render() {
-    return (
-      <View style={styles.mainContainer}>{this.renderCollectionList()}</View>
-    );
+    return <View>{this.renderCollectionList()}</View>;
   }
 }
 
